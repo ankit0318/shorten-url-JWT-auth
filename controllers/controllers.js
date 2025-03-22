@@ -1,7 +1,6 @@
 const { nanoid } = require("nanoid");
 
 const URL = require("../models/url.js");
-const { now } = require("mongoose");
 async function handleShortenUrl(req, res) {
   const shortId = nanoid(8);
   if (!req.body) return res.status(400).json({ msg: "need url" });
@@ -18,7 +17,9 @@ async function handleShortenUrl(req, res) {
   })
  }
   await URL.create({ shortId: shortId, redirectUrl: url, visitHistory: [] });
-  res.status(201).json({ shortUrl:`http://localhost:3000/url/${shortId}` });
+  res.status(201).render("home",{ shortUrl:`http://localhost:3000/url/${shortId}` })
+  
+  
 }
 const handleGetAnalytics = async (req, res) => {
   const shortId = req.params.shortId;
