@@ -1,4 +1,4 @@
-# 🚀 Node.js REST API Practice
+# 🚀 URL Shortener API
 
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
@@ -7,27 +7,28 @@
 
 ## 📌 Overview
 
-This project demonstrates a RESTful API built with Node.js, Express, and MongoDB. It implements a user management system with CRUD operations and follows MVC architecture pattern.
+This project implements a URL shortening service built with Node.js, Express, and MongoDB. It allows users to create shortened URLs, redirect to original URLs, and view analytics for each shortened URL.
 
 ## 🛠️ Technologies Used
 
 - **Node.js**: JavaScript runtime for building server-side applications
 - **Express.js**: Web framework for creating robust APIs
-- **MongoDB**: NoSQL database for storing user data
+- **MongoDB**: NoSQL database for storing URL data
 - **Mongoose**: ODM library for MongoDB and Node.js
+- **Nanoid**: Library for generating unique short IDs
 - **MVC Architecture**: Model-View-Controller design pattern
-- **RESTful API Design**: Standard HTTP methods for CRUD operations
+- **RESTful API Design**: Standard HTTP methods for API operations
 
 ## 🏗️ Project Structure
 
 ```
-node-practice/
+shorten-url/
 ├── controllers/
-│   └── controllers.js     # User controllers for handling requests
-├── model/
-│   └── User.js            # Mongoose schema and model for users
-├── router/
-│   └── userRoutes.js      # Express routes for user endpoints
+│   └── controllers.js     # Controllers for handling URL shortening requests
+├── models/
+│   └── url.js             # Mongoose schema and model for URLs
+├── routes/
+│   └── userRoutes.js      # Express routes for URL endpoints
 ├── connection.js          # MongoDB connection setup
 ├── index.js               # Main application entry point
 └── README.md              # Project documentation
@@ -35,19 +36,18 @@ node-practice/
 
 ## 🔄 API Endpoints
 
-| Method | Endpoint   | Description                |
-|--------|------------|----------------------------|
-| GET    | /user      | Retrieve all users         |
-| POST   | /user      | Create a new user          |
-| GET    | /user/:id  | Retrieve a specific user   |
-| PATCH  | /user/:id  | Update a specific user     |
+| Method | Endpoint             | Description                           |
+|--------|----------------------|---------------------------------------|
+| POST   | /url                 | Create a shortened URL                |
+| GET    | /url/:shortId        | Redirect to the original URL          |
+| GET    | /url/analytics/:shortId | Get click analytics for a short URL |
 
 ## 📋 Data Model
 
-**User**:
-- `name` (String, required): User's full name
-- `email` (String, required): User's email address
-- `gender` (String, optional): User's gender
+**URL**:
+- `shortId` (String, required): Unique short identifier
+- `redirectUrl` (String, required): Original URL to redirect to
+- `visitHistory` (Array): Collection of timestamp objects for each visit
 - `timestamps`: Automatically track creation and update times
 
 ## 🚀 Getting Started
@@ -55,7 +55,7 @@ node-practice/
 1. **Clone the repository**
    ```
    git clone <repository-url>
-   cd node-practice
+   cd shorten-url
    ```
 
 2. **Install dependencies**
@@ -80,58 +80,60 @@ node-practice/
 
 ## 💻 Code Highlights
 
-### Clean Routing with Express Router
+### URL Shortening with Nanoid
 ```javascript
-router.get("/", getAllUsers);
-router.post("/", createUser);
-
-router
-    .route("/:id")
-    .get(getUserById)
-    .patch(updateUserById);
+const shortId = nanoid(8);
+await URL.create({ shortId: shortId, redirectUrl: url, visitHistory: [] });
+res.status(201).json({ shortUrl:`http://localhost:3000/url/${shortId}` });
 ```
 
-### Mongoose Schema Design
+### URL Redirection Implementation
 ```javascript
-const userSchema = new mongoose.Schema(
-    {
-      name: { type: String, required: true },
-      email: { type: String, required: true },
-      gender: { type: String }
+const entry = await URL.findOneAndUpdate(
+  { shortId },
+  {
+    $push: {
+      visitHistory: {
+        timeStamp: new Date(),
+      },
     },
-    { timestamps: true }
+  }
 );
+res.redirect(entry.redirectUrl);
 ```
 
-### MVC Pattern Implementation
-- **Models**: Database schemas and data logic
-- **Controllers**: Request handling and business logic
-- **Routes**: Endpoint definitions and HTTP method handling
+### URL Analytics Tracking
+```javascript
+res.json({
+  totalClicks: result.visitHistory.length,
+  analytics: result.visitHistory.map((visit) => ({
+    ...visit,
+    timeStamp: visit.timeStamp && !isNaN(new Date(visit.timeStamp).getTime()) 
+      ? new Date(visit.timeStamp).toISOString() 
+      : 'Invalid Date',
+  })),
+});
+```
 
 ## 🔧 Skills Demonstrated
 
-- ✅ RESTful API development
+- ✅ URL shortening algorithm implementation
 - ✅ MVC architectural pattern implementation
 - ✅ MongoDB database integration with Mongoose
 - ✅ Express.js middleware usage
 - ✅ Error handling in asynchronous Node.js code
-- ✅ HTTP status codes for proper API responses
+- ✅ HTTP redirects and status codes
+- ✅ Analytics tracking and reporting
 - ✅ Modular code organization
 
 ## 📝 Future Enhancements
 
-- Authentication and authorization
-- Input validation
-- Pagination for listing endpoints
+- Custom short URL support
+- User authentication and personal URL management
+- QR code generation for shortened URLs
+- Link expiration options
 - Comprehensive test coverage
+- Advanced analytics with geographical data
 - API documentation with Swagger
 
-## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
-<p align="center">
-  Made with ❤️ by [Your Name]
-</p>
