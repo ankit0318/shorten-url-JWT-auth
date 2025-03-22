@@ -2,7 +2,6 @@
 const express = require("express");
 const app = express();
 const router = require("./routes/userRoutes");
-const { connectMongoDb } = require("./connection");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // Adding JSON middleware for API requests
 
