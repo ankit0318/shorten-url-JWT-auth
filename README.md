@@ -174,4 +174,6 @@ The interface is fully responsive and styled with a modern, clean design.
 - Copy-to-clipboard functionality
 
 
+![image](https://github.com/user-attachments/assets/380def29-e23f-40b2-b3e0-3c5cf89686c6)
+![image](https://github.com/user-attachments/assets/9b5f5b4a-5f03-4437-b744-675c3abab642)
 ![image](https://github.com/user-attachments/assets/f7eec4f4-ecd4-4421-8cd9-ffcbc1e85838)
