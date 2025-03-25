@@ -23,7 +23,6 @@ function restrictAuth(req, res, next, roles = ["admin","employee"]) {
   if (roles.length > 0 && !roles.includes(user.role)) {
     return res.status(403).send("You are not authorized");
   }
-
   req.user = user;
   next();
 }``
