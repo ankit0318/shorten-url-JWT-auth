@@ -1,10 +1,24 @@
-const sessionIdtoUserMap=new Map();
-function setUser(id,user)
-{
-    sessionIdtoUserMap.set(id,user);
+const jwt = require("jsonwebtoken");
+
+const SECRET_KEY = "opensesame"; // Replace with a secure key
+
+function generateToken(user) {
+    return jwt.sign({ id: user.id, username: user.username ,role: user.role}, SECRET_KEY, { expiresIn: "1h" });
 }
-function getUser(id)
-{
-    return sessionIdtoUserMap.get(id);
+
+function verifyToken(token) {
+    try {
+        return jwt.verify(token, SECRET_KEY);
+    } catch (err) {
+        console.error("Invalid token:", err);
+        return null;
+    }
 }
-module.exports={setUser,getUser};
+
+function getUserFromToken(token) {
+    const decoded = verifyToken(token);
+    if (!decoded) return null;
+    return { id: decoded.id, username: decoded.username ,role:decoded.role};
+}
+
+module.exports = { generateToken, verifyToken, getUserFromToken };

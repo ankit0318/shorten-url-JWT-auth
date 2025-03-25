@@ -20,6 +20,7 @@ This project implements a URL shortening service built with Node.js, Express, an
 - **UUID**: Library for generating session IDs
 - **EJS**: Templating engine for rendering dynamic HTML pages
 - **CSS**: Custom styling with responsive design
+- **JWT (JSON Web Tokens)**: Stateless authentication mechanism
 - **MVC Architecture**: Model-View-Controller design pattern
 - **Cookie-Parser**: Middleware for parsing cookies in requests
 
@@ -72,7 +73,7 @@ The interface is fully responsive and styled with a modern, clean design.
 | GET    | /url/:shortId             | Redirect to the original URL          |
 | GET    | /url/analytics/:shortId   | Get click analytics for a short URL   |
 | GET    | /user/login               | Render the login page                 |
-| POST   | /user/login               | Log in a user                         |
+| POST   | /user/login               | Log in a user and return a JWT token  |
 | GET    | /user/signup              | Render the signup page                |
 | POST   | /user/signup              | Register a new user                   |
 
@@ -127,9 +128,10 @@ The interface is fully responsive and styled with a modern, clean design.
 - Animated UI elements for better user experience
 
 ### User Authentication
+- Stateless authentication using JSON Web Tokens (JWT)
 - Secure signup and login functionality
-- Session management using cookies
-- Middleware to restrict access to logged-in users
+- Middleware to restrict access to logged-in users for URL-related routes
+- Role-based access control for specific endpoints
 
 ### URL Shortening
 - Generate short 8-character unique IDs
@@ -151,12 +153,12 @@ The interface is fully responsive and styled with a modern, clean design.
 
 ## 🔧 Skills Demonstrated
 
+- ✅ Stateless authentication with JWT
 - ✅ Full-stack web development with Node.js
 - ✅ Front-end design with EJS templating and CSS
 - ✅ MVC architectural pattern implementation
 - ✅ MongoDB database integration with Mongoose
 - ✅ Express.js middleware usage
-- ✅ User authentication and session management
 - ✅ Error handling in asynchronous Node.js code
 - ✅ HTTP redirects and status codes
 - ✅ Analytics tracking and reporting

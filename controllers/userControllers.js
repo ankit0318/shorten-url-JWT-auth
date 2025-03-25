@@ -1,13 +1,14 @@
 const User = require("../models/user");
 const {v4:uuidv4}=require("uuid");
-const { setUser } = require("../service/auth");
+const { setUser, generateToken } = require("../service/auth");
 async function handleSignUp(req,res)
 {
-const {username,email,password}=req.body;
+const {username,email,password,role}=req.body;
 await User.create({
     username:username,
     email:email,
-    password:password
+    password:password,
+    role:role
 });
 return res.redirect("login")
  
@@ -21,9 +22,10 @@ async function handleLogin(req,res)
         return res.status(401).send("Invalid username or password");
     
     }
-    const sessionId=uuidv4();
-    setUser(id,user);
-    res.cookie("uid",sessionId);
+   
+    const token=generateToken(user);
+    res.cookie("token",token);
+ 
     res.redirect("/url");  
 }
 module.exports={handleSignUp,handleLogin};
